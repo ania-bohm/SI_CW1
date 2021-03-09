@@ -55,4 +55,8 @@ public class PCB {
         System.out.println("Connection table: ");
         this.printConnectionTab();
     }
+
+    public float calculateFitness(Individual individual) {
+        return 0.1f;
+    }
 }
