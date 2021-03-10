@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Segment {
     private Point startPoint;
     private Point endPoint;
@@ -43,12 +46,23 @@ public class Segment {
 
     @Override
     public String toString() {
-        String segmentPath;
+        String segmentPath = "[";
+        List<Point> pointsInSegment = new ArrayList<>();
+        pointsInSegment = this.getPointsInSegment();
+        for (int i = 0; i < pointsInSegment.size() - 1; i++) {
+            segmentPath += pointsInSegment.get(i).toString() + ", ";
+        }
+        segmentPath += pointsInSegment.get(pointsInSegment.size() - 1).toString() + "]";
+        return segmentPath;
+    }
+
+    public List<Point> getPointsInSegment() {
+        List<Point> pointsInSegment;
         int currentX;
         int currentY;
         Point currentPoint;
 
-        segmentPath = "[";
+        pointsInSegment = new ArrayList<>();
         currentX = startPoint.getX();
         currentY = startPoint.getY();
 
@@ -56,13 +70,13 @@ public class Segment {
             if (startPoint.getY() < endPoint.getY()) {
                 while (currentY != endPoint.getY()) {
                     currentPoint = new Point(currentX, currentY);
-                    segmentPath += currentPoint.toString() + ", ";
+                    pointsInSegment.add(currentPoint);
                     currentY++;
                 }
             } else {
                 while (currentY != endPoint.getY()) {
                     currentPoint = new Point(currentX, currentY);
-                    segmentPath += currentPoint.toString() + ", ";
+                    pointsInSegment.add(currentPoint);
                     currentY--;
                 }
             }
@@ -70,18 +84,18 @@ public class Segment {
             if (startPoint.getX() < endPoint.getX()) {
                 while (currentX != endPoint.getX()) {
                     currentPoint = new Point(currentX, currentY);
-                    segmentPath += currentPoint.toString() + ", ";
+                    pointsInSegment.add(currentPoint);
                     currentX++;
                 }
             } else {
                 while (currentX != endPoint.getX()) {
                     currentPoint = new Point(currentX, currentY);
-                    segmentPath += currentPoint.toString() + ", ";
+                    pointsInSegment.add(currentPoint);
                     currentX--;
                 }
             }
         }
-        segmentPath += endPoint.toString() + "]";
-        return segmentPath;
+        pointsInSegment.add(new Point(endPoint.getX(), endPoint.getY()));
+        return pointsInSegment;
     }
 }

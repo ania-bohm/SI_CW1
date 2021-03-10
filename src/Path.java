@@ -89,4 +89,16 @@ public class Path {
         path += segmentList.get(segmentList.size() - 1).toString() + "}";
         return path;
     }
+
+    public List<Point> getPointsInPath() {
+        List<Point> pointsInPath = new ArrayList<>();
+
+        for (int i = 0; i < segmentList.size(); i++) {
+            for (int j = 0; j < segmentList.get(i).getPointsInSegment().size() - 1; j++) {
+                pointsInPath.add(segmentList.get(i).getPointsInSegment().get(j));
+            }
+        }
+        pointsInPath.add(endPoint);
+        return pointsInPath;
+    }
 }
