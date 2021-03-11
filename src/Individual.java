@@ -6,7 +6,7 @@ public class Individual {
     private Point[][] connectionTab;
     private List<Path> pathList;
     private int pathsLength, segmentsCount;
-    private float fitness;
+    private int fitness;
 
     public Individual(Point[][] connectionTab) {
         this.connectionTab = new Point[connectionTab.length][2];
@@ -45,11 +45,11 @@ public class Individual {
         return segmentsCount;
     }
 
-    public float getFitness() {
+    public int getFitness() {
         return fitness;
     }
 
-    public void setFitness(float fitness) {
+    public void setFitness(int fitness) {
         this.fitness = fitness;
     }
 
@@ -89,9 +89,9 @@ public class Individual {
     }
 
     public void printAllIndividualInfo() {
-        System.out.println("Path in short version: " + this.printPathShort());
-        System.out.println("Path in extended version: " + this.toString());
-        System.out.println("Total path length: " + this.calculateTotalPathLength());
+        System.out.println("Paths in short version: " + this.printPathShort());
+        System.out.println("Paths in extended version: " + this.toString());
+        System.out.println("Total paths length: " + this.calculateTotalPathLength());
         System.out.println("Segments count: " + this.countAllSegments());
     }
 

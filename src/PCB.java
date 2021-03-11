@@ -74,7 +74,6 @@ public class PCB {
         int outOfBoundsPathsLength = countOutOfBoundsPathsLength(individual);
 
         fitness = 1000 * intersectionsCount + 500 * outOfBoundsPathsCount + 200 * outOfBoundsPathsLength + 2 * segmentsCount + 1 * pathsLength;
-
         return fitness;
     }
 

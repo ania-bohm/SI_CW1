@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SI_ĆW1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SI_W1_jar</output-path>
+    <root id="archive" name="SI_ĆW1.jar">
+      <element id="module-output" name="SI_ĆW1" />
+    </root>
+  </artifact>
+</component>
