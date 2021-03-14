@@ -27,7 +27,10 @@ public class Individual {
             this.connectionTab[i][0] = new Point(individual.getConnectionTab()[i][0]);
             this.connectionTab[i][1] = new Point(individual.getConnectionTab()[i][1]);
         }
-        this.pathList = new ArrayList<>(individual.getPathList());//<------------------check it
+        this.pathList = new ArrayList<>();
+        for (int i = 0; i < individual.getPathList().size(); i++) {
+            this.pathList.add(new Path(individual.getPathList().get(i)));
+        }
         this.pathsLength = individual.getPathsLength();
         this.segmentsCount = individual.getSegmentsCount();
         this.fitness = individual.getFitness();
@@ -204,5 +207,9 @@ public class Individual {
         child.setPathList(newPathList);
 
         return child;
+    }
+
+    public Individual mutation(float pm) {
+        return null;
     }
 }

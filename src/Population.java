@@ -12,23 +12,36 @@ public class Population {
         individualList = new ArrayList<>();
     }
 
-    public List<Individual> getIndividualArray() {
+    public Population(Population population) {
+        this.individualList = new ArrayList<>();
+        this.populationSize = population.getPopulationSize();
+        for (int i = 0; i < population.getPopulationSize(); i++) {
+            this.individualList.add(new Individual(population.getIndividualList().get(i)));
+        }
+    }
+
+    public List<Individual> getIndividualList() {
         return individualList;
     }
 
-    public void setIndividualArray(List<Individual> individualArray) {
-        this.individualList = individualArray;
+    public void setIndividualList(List<Individual> individualList) {
+        this.individualList.clear();
+        for (int i = 0; i < individualList.size(); i++) {
+            this.individualList.add(new Individual(individualList.get(i)));
+        }
+        this.populationSize = individualList.size();
     }
 
     public int getPopulationSize() {
         return populationSize;
     }
 
-    public void setPopulationSize(int populationSize) {
-        this.populationSize = populationSize;
-    }
+//    public void setPopulationSize(int populationSize) {
+//        this.populationSize = populationSize;
+//    }
 
     public void populateRandom(PCB pcb) {
+        individualList.clear();
         for (int i = 0; i < populationSize; i++) {
             Individual individual = new Individual(pcb.getConnectionTab());
             individualList.add(individual.generateRandomIndividual());
