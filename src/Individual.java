@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Individual {
     private Point[][] connectionTab;
@@ -18,6 +19,18 @@ public class Individual {
         this.pathsLength = 0;
         this.segmentsCount = 0;
         this.fitness = 0;
+    }
+
+    public Individual(Individual individual) {
+        this.connectionTab = new Point[individual.getConnectionTab().length][2];
+        for (int i = 0; i < individual.getConnectionTab().length; i++) {
+            this.connectionTab[i][0] = new Point(individual.getConnectionTab()[i][0]);
+            this.connectionTab[i][1] = new Point(individual.getConnectionTab()[i][1]);
+        }
+        this.pathList = new ArrayList<>(individual.getPathList());//<------------------check it
+        this.pathsLength = individual.getPathsLength();
+        this.segmentsCount = individual.getSegmentsCount();
+        this.fitness = individual.getFitness();
     }
 
     public Point[][] getConnectionTab() {
@@ -167,5 +180,29 @@ public class Individual {
         }
         randomIndividual.setPathList(pathList);
         return randomIndividual;
+    }
+
+    public Individual crossover(Individual secondParent) {
+        int crossPoint;
+        Random random;
+        List<Path> newPathList;
+        Individual child;
+
+        random = new Random();
+        crossPoint = random.nextInt(this.pathList.size() + 1);
+        newPathList = new ArrayList<>();
+        child = new Individual(this.connectionTab);
+
+        for (int i = 0; i < crossPoint; i++) {
+            newPathList.add(this.getPathList().get(i));
+        }
+
+        for (int i = crossPoint; i < secondParent.getPathList().size(); i++) {
+            newPathList.add(secondParent.getPathList().get(i));
+        }
+
+        child.setPathList(newPathList);
+
+        return child;
     }
 }
