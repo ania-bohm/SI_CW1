@@ -64,7 +64,7 @@ public class GeneticAlgorithm {
     }
 
     // selection type - 0 - tournament, 1 - roulette
-    public Individual startEvolution(int selectionType, int[] bestFitnessInGeneration) {
+    public Individual startEvolution(int selectionType, int[] bestFitnessInGeneration, float[] globalBestFitness) {
         int iteration;
         Population population;
         Individual bestIndividual;
@@ -78,6 +78,7 @@ public class GeneticAlgorithm {
         population = initializePopulation();
         population.calculatePopulationFitness(pcb);
         bestIndividual = new Individual(population.findBestIndividual());
+        globalBestFitness[0] = bestIndividual.getFitness();
         random = new Random();
 
         while (iteration < numberOfGenerations) {
@@ -87,6 +88,7 @@ public class GeneticAlgorithm {
             if (population.findBestIndividual().getFitness() < bestIndividual.getFitness()) {
                 bestIndividual = new Individual(population.findBestIndividual());
             }
+            globalBestFitness[iteration] = bestIndividual.getFitness();
 
             for (int i = 0; i < populationSize; i++) {
                 Individual firstParent;

@@ -25,13 +25,18 @@ public class Main {
                 bestIndividual = bestIndividual.generateRandomIndividual();
 
                 // running evolution 5 times to calculate avgFitness in each generation (graph)
-                GeneticAlgorithm GA = new GeneticAlgorithm(100, 100, 0.7f, 0.95f, 10, pcb);
-                int iterations = 5;
+                GeneticAlgorithm GA = new GeneticAlgorithm(100, 100, 0.7f, 0.90f, 10, pcb);
+
+                // iterations - number of examined and averaged evolutions
+                int iterations = 1;
                 int[] bestFitnessInGeneration = new int[GA.getNumberOfGenerations()];
+                float[] bestGlobalFitness = new float[GA.getNumberOfGenerations()];
                 int[][] fitnessMatrix = new int[iterations][GA.getNumberOfGenerations()];
                 float[] avgFitnessInGeneration = new float[GA.getNumberOfGenerations()];
+
                 for (int i = 0; i < iterations; i++) {
-                    bestIndividual = GA.startEvolution(0, bestFitnessInGeneration);
+                    // selectionType: 0 - tournament, 1 - roulette
+                    bestIndividual = GA.startEvolution(0, bestFitnessInGeneration, bestGlobalFitness);
                     fitnessMatrix[i] = bestFitnessInGeneration;
                 }
                 int sumFitness = 0;
@@ -45,7 +50,8 @@ public class Main {
 
                 // saving avgFitness to file
                 Saver saver = new Saver();
-                saver.saveToFile(avgFitnessInGeneration);
+//                saver.saveToFile(avgFitnessInGeneration);
+                saver.saveToFile(bestGlobalFitness);
 
                 // displaying pathList of the best Individual
                 Individual finalRandomIndividual = bestIndividual;
