@@ -37,14 +37,16 @@ class LineComponent extends JComponent {
         super.paintComponent(g);
         int width = getWidth();
         int height = getHeight();
+
         g2d.setColor(Color.darkGray);
         g2d.fillRect(0, 0, width - 1, height - 1);
         g2d.setColor(Color.black);
         g2d.drawRect(0, 0, width - 1, height - 1);
+
         g2d.setColor(Color.white);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                g2d.fillOval(i * 50 + 22, j * 50 + 22, 5, 5);
+                g2d.fillOval(i * 40 + 22, j * 40 + 22, 5, 5);
             }
         }
         g2d.setStroke(new BasicStroke(8));
@@ -55,17 +57,17 @@ class LineComponent extends JComponent {
         g2d.setPaint(gray);
         for (Line2D.Double line : lines) {
             g2d.drawLine(
-                    (int) line.getX1() * 50 + 25,
-                    (int) line.getY1() * 50 + 25,
-                    (int) line.getX2() * 50 + 25,
-                    (int) line.getY2() * 50 + 25
+                    (int) line.getX1() * 40 + 25,
+                    (int) line.getY1() * 40 + 25,
+                    (int) line.getX2() * 40 + 25,
+                    (int) line.getY2() * 40 + 25
             );
         }
         g2d.setPaint(Color.white);
         for (Ellipse2D.Double point : points) {
             g2d.fillOval(
-                    (int) (point.getX() * 50) - 6 + 25,
-                    (int) (point.getY() * 50) - 6 + 25,
+                    (int) (point.getX() * 40) - 6 + 25,
+                    (int) (point.getY() * 40) - 6 + 25,
 //                    (int) (point.getX() * 50),
 //                    (int) (point.getY() * 50),
                     (int) point.getWidth(),

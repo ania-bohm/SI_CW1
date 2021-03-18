@@ -41,7 +41,7 @@ public class Loader {
                 connectionList.add(new Point(x1, y1));
                 connectionList.add(new Point(x2, y2));
             }
-            connectionCount = connectionList.size()/2;
+            connectionCount = connectionList.size() / 2;
             connectedPoints = new Point[connectionCount][2];
             for (int i = 0; i < connectionList.size(); i += 2) {
                 connectedPoints[i / 2][0] = new Point(connectionList.get(i));
@@ -64,7 +64,7 @@ public class Loader {
             List<Point> connectionList;
             Point[][] connectedPoints;
 
-            BufferedReader txtReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName+".txt")));
+            BufferedReader txtReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName + ".txt")));
 
             line = txtReader.readLine();
             splitFirstLine = new String[2];
@@ -84,13 +84,35 @@ public class Loader {
                 connectionList.add(new Point(x1, y1));
                 connectionList.add(new Point(x2, y2));
             }
-            connectionCount = connectionList.size()/2;
+            connectionCount = connectionList.size() / 2;
             connectedPoints = new Point[connectionCount][2];
             for (int i = 0; i < connectionList.size(); i += 2) {
                 connectedPoints[i / 2][0] = new Point(connectionList.get(i));
                 connectedPoints[i / 2][1] = new Point(connectionList.get(i + 1));
             }
             return new PCB(width, height, connectionCount, connectedPoints);
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Float> loadFitness(String fileName) {
+        try {
+            String line;
+            List<Float> fitnessList = new ArrayList<>();
+
+            BufferedReader txtReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(fileName + ".txt")));
+
+            while ((line = txtReader.readLine()) != null) {
+                fitnessList.add(Float.valueOf(line));
+            }
+            return fitnessList;
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

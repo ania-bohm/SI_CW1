@@ -304,10 +304,6 @@ public class Individual {
                                 new Segment(new Point(mutatedSegment.getStartPoint()), new Point(mutatedSegment.getStartPoint())));
                         path.countSegments();
 
-                        //Now i have to do the same thing as with "a"
-                        //but first i have to check if im at the first or last segment
-                        //and i have to check which side of the segment im on, var side is for it
-                        //random shift factor
                         segmentIndex += 2 * side; // choosing segment to shift (left/right, up/down)
                         this.countAllSegments();
                         this.calculateTotalPathLength();
