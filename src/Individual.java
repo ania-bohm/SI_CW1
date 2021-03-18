@@ -74,6 +74,7 @@ public class Individual {
         for (int i = 0; i < pathList.size(); i++) {
             segmentCount += pathList.get(i).countSegments();
         }
+        this.segmentsCount = segmentCount;
         return segmentCount;
     }
 
@@ -82,6 +83,7 @@ public class Individual {
         for (int i = 0; i < pathList.size(); i++) {
             totalPathLength += pathList.get(i).calculatePathLength();
         }
+        this.pathsLength = totalPathLength;
         return totalPathLength;
     }
 
@@ -210,6 +212,166 @@ public class Individual {
     }
 
     public Individual mutation(float pm) {
-        return null;
+        Random random = new Random();
+        float probability;
+        Segment mutatedSegment, previousSegment, nextSegment;
+        boolean isSegmentVertical;
+        int direction; // -1 - up/left, 1 - down/right
+        int segmentIndex;
+        for (Path path : this.getPathList()) {
+            previousSegment = null;
+            nextSegment = null;
+            probability = 0.1f;
+//            probability = random.nextFloat();
+            if (probability < pm) { // if mutation occurs then
+                probability = random.nextFloat();
+                if (probability < 0.5) { // mutation a
+//                    System.out.println("Mutation a");
+                    direction = random.nextInt(2) * 2 - 1; // -1 or 1
+                    segmentIndex = random.nextInt(path.getSegmentCount()); // random index pointing to segment
+//                    System.out.println("SegmentIndex in A: " + segmentIndex);
+//                    System.out.println("Direction in A: " + direction);
+                    mutatedSegment = path.getSegmentList().get(segmentIndex);
+                    if (segmentIndex == 0) { // if the first segment in path is chosen
+                        // adding new segment with length = 0 in path's start point so it can be used as a previous segment
+                        path.getSegmentList().add(0, new Segment(new Point(path.getStartPoint()), new Point(path.getStartPoint())));
+                        path.countSegments();
+                        previousSegment = path.getSegmentList().get(0);
+                        segmentIndex++;
+                    } else {
+                        previousSegment = path.getSegmentList().get(segmentIndex - 1);
+                    }
+                    if (segmentIndex == path.getSegmentCount() - 1) { // if the last segment in path is chosen
+                        // adding new segment with length = 0 in path's end point so it can be used as a next segment
+                        path.getSegmentList().add(new Segment(new Point(path.getEndPoint()), new Point(path.getEndPoint())));
+                        path.countSegments();
+                        nextSegment = path.getSegmentList().get(path.getSegmentList().size() - 1);
+                    } else {
+                        nextSegment = path.getSegmentList().get(segmentIndex + 1);
+                    }
+                    // determining orientation of the segment
+                    isSegmentVertical = isVertical(mutatedSegment.getStartPoint(), mutatedSegment.getEndPoint());
+                    if (isSegmentVertical) { // if vertical
+                        mutatedSegment.getStartPoint().setX(mutatedSegment.getStartPoint().getX() + direction);
+                        mutatedSegment.getEndPoint().setX(mutatedSegment.getEndPoint().getX() + direction);
+                        if (previousSegment != null) {
+                            previousSegment.getEndPoint().setX(mutatedSegment.getStartPoint().getX());
+                        }
+                        if (nextSegment != null) {
+                            nextSegment.getStartPoint().setX(mutatedSegment.getEndPoint().getX());
+                        }
+
+                    } else { // if horizontal
+                        mutatedSegment.getStartPoint().setY(mutatedSegment.getStartPoint().getY() + direction);
+                        mutatedSegment.getEndPoint().setY(mutatedSegment.getEndPoint().getY() + direction);
+                        if (previousSegment != null) {
+                            previousSegment.getEndPoint().setY(mutatedSegment.getStartPoint().getY());
+                        }
+                        if (nextSegment != null) {
+                            nextSegment.getStartPoint().setY(mutatedSegment.getEndPoint().getY());
+                        }
+
+                    }
+                    this.countAllSegments();
+                    this.calculateTotalPathLength();
+
+                } else { // mutation b
+//                    System.out.println("Mutation b");
+                    int side = random.nextInt(2); // 0 - left/up, 1 - right/down
+                    direction = random.nextInt(2) * 2 - 1; // -1 or 1
+                    segmentIndex = random.nextInt(path.getSegmentCount());
+//                    System.out.println("segment index in B: " + segmentIndex);
+//                    System.out.println("direction in B: " + direction);
+                    mutatedSegment = path.getSegmentList().get(segmentIndex);
+                    isSegmentVertical = isVertical(mutatedSegment.getStartPoint(), mutatedSegment.getEndPoint());
+
+                    if (mutatedSegment.getSegmentLength() > 1) {
+                        int bisection = random.nextInt(mutatedSegment.getSegmentLength() - 1) + 1;
+                        if (isSegmentVertical) { //if vertical
+                            path.getSegmentList().add(segmentIndex,
+                                    new Segment(new Point(mutatedSegment.getStartPoint()),
+                                            (new Point(mutatedSegment.getStartPoint().getX(), mutatedSegment.getStartPoint().getY() + bisection))));
+                            path.countSegments();
+                            mutatedSegment.getStartPoint().setY(mutatedSegment.getStartPoint().getY() + bisection);
+                        } else { //if horizontal
+                            path.getSegmentList().add(segmentIndex,
+                                    new Segment(new Point(mutatedSegment.getStartPoint()),
+                                            (new Point(mutatedSegment.getStartPoint().getX() + bisection, mutatedSegment.getStartPoint().getY()))));
+                            path.countSegments();
+                            mutatedSegment.getStartPoint().setX(mutatedSegment.getStartPoint().getX() + bisection);
+                        }
+                        path.getSegmentList().add(segmentIndex + 1,
+                                new Segment(new Point(mutatedSegment.getStartPoint()), new Point(mutatedSegment.getStartPoint())));
+                        path.countSegments();
+
+                        //Now i have to do the same thing as with "a"
+                        //but first i have to check if im at the first or last segment
+                        //and i have to check which side of the segment im on, var side is for it
+                        //random shift factor
+                        segmentIndex += 2 * side; // choosing segment to shift (left/right, up/down)
+                        this.countAllSegments();
+                        this.calculateTotalPathLength();
+                    }
+                    mutatedSegment = path.getSegmentList().get(segmentIndex);
+
+                    if (segmentIndex == 0) { //if the first segment is chosen
+                        path.getSegmentList().add(0, new Segment(new Point(path.getStartPoint()), new Point(path.getStartPoint())));
+                        path.countSegments();
+                        previousSegment = path.getSegmentList().get(0);
+                        segmentIndex++;
+                    } else {
+                        previousSegment = path.getSegmentList().get(segmentIndex - 1);
+                    }
+                    if (segmentIndex == path.getSegmentCount() - 1) { // if the last segment is chosen
+                        path.getSegmentList().add(new Segment(new Point(path.getEndPoint()), new Point(path.getEndPoint())));
+                        path.countSegments();
+                        nextSegment = path.getSegmentList().get(path.getSegmentCount() - 1);
+                    } else {
+                        nextSegment = path.getSegmentList().get(segmentIndex + 1);
+                    }
+
+                    if (isSegmentVertical) { //if chosen segment is vertical
+                        mutatedSegment.getStartPoint().setX(mutatedSegment.getStartPoint().getX() + direction);
+                        mutatedSegment.getEndPoint().setX(mutatedSegment.getEndPoint().getX() + direction);
+                        if (previousSegment != null) {
+                            previousSegment.getEndPoint().setX(mutatedSegment.getStartPoint().getX());
+                        }
+                        if (nextSegment != null) {
+                            nextSegment.getStartPoint().setX(mutatedSegment.getEndPoint().getX());
+                        }
+
+                    } else {// if chosen segment is horizontal
+                        mutatedSegment.getStartPoint().setY(mutatedSegment.getStartPoint().getY() + direction);
+                        mutatedSegment.getEndPoint().setY(mutatedSegment.getEndPoint().getY() + direction);
+                        if (previousSegment != null) {
+                            previousSegment.getEndPoint().setY(mutatedSegment.getStartPoint().getY());
+                        }
+                        if (nextSegment != null) {
+                            nextSegment.getStartPoint().setY(mutatedSegment.getEndPoint().getY());
+                        }
+                    }
+                    this.countAllSegments();
+                    this.calculateTotalPathLength();
+                }
+            }
+//            System.out.println(this.toString());
+        }
+        // fixing looped paths
+        this.fixLoopedPaths();
+        return this;
+    }
+
+    public boolean isVertical(Point p1, Point p2) {
+        if (p1.getX() == p2.getX()) {
+            return true;
+        }
+        return false;
+    }
+
+    public Individual fixLoopedPaths() {
+        for (Path path : this.getPathList()) {
+            path.fixPath();
+        }
+        return this;
     }
 }

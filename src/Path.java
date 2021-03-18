@@ -50,11 +50,11 @@ public class Path {
     }
 
     public int getPathLength() {
-        return pathLength;
+        return calculatePathLength();
     }
 
     public int getSegmentCount() {
-        return segmentCount;
+        return countSegments();
     }
 
     public int countSegments() {
@@ -100,5 +100,70 @@ public class Path {
         }
         pointsInPath.add(endPoint);
         return pointsInPath;
+    }
+
+    public Path fixPath() {
+        boolean wasFixed = true;
+        while(wasFixed) {
+            wasFixed = false;
+            for (int i = 0; i < getSegmentCount(); i++) {
+                if (getSegmentList().get(i).getSegmentLength() == 0) {
+                    wasFixed = true;
+                    getSegmentList().remove(i);
+                    // quick fix
+                    if (i != 0 && i < (getSegmentList().size())) {
+                        getSegmentList().get(i - 1).setEndPoint(new Point(getSegmentList().get(i).getEndPoint()));
+                        getSegmentList().remove(i);
+                    }
+                    i--;
+                }
+            }
+        }
+        while (wasFixed) {
+            wasFixed = false;
+            for (int i = 0; i < getSegmentCount(); i++) {
+                int counter = 0;
+                for (int j = i + 1; j < getSegmentCount(); j++) {
+                    if (getSegmentList().get(i).getStartPoint().compareTo(getSegmentList().get(j).getStartPoint()) == 0) {
+                        counter++;
+                        for (int c = 0; c < counter; c++) {
+                            getSegmentList().remove(i);
+                        }
+                        counter = 0;
+                        wasFixed = true;
+                        break;
+                    } else {
+                        counter++;
+                    }
+                }
+            }
+
+            for (int i = getSegmentCount() - 1; i > 1; i--) { // i od 4 do 2
+                int counter = 0;
+                for (int j = i - 1; j > 0; j--) { // j od 3 do 1
+                    if (getSegmentList().get(i).getEndPoint().compareTo(getSegmentList().get(j).getEndPoint()) == 0) {
+                        counter++;
+                        for (int c = 0; c < counter; c++) {
+                            getSegmentList().remove(i);
+                            i--;
+                        }
+                        counter = 0;
+                        wasFixed = true;
+                        break;
+                    } else {
+                        counter++;
+                    }
+                }
+            }
+        }
+        return this;
+    }
+
+
+    public boolean isVertical(Point p1, Point p2) {
+        if (p1.getX() == p2.getX()) {
+            return true;
+        }
+        return false;
     }
 }

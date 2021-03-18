@@ -9,7 +9,7 @@ public class Segment {
     public Segment(Point startPoint, Point endPoint) {
         this.startPoint = new Point(startPoint);
         this.endPoint = new Point(endPoint);
-        this.segmentLength = Math.abs(this.startPoint.getX() - this.endPoint.getX()) + Math.abs(this.startPoint.getY() - this.endPoint.getY());
+        this.segmentLength = countSegmentLength();
     }
 
     public Segment(Segment s) {
@@ -24,7 +24,7 @@ public class Segment {
 
     public void setStartPoint(Point startPoint) {
         this.startPoint = new Point(startPoint);
-        this.segmentLength = Math.abs(this.startPoint.getX() - this.endPoint.getX()) + Math.abs(this.startPoint.getY() - this.endPoint.getY());
+        this.segmentLength = countSegmentLength();
     }
 
     public Point getEndPoint() {
@@ -33,11 +33,16 @@ public class Segment {
 
     public void setEndPoint(Point endPoint) {
         this.endPoint = new Point(endPoint);
-        this.segmentLength = Math.abs(this.startPoint.getX() - this.endPoint.getX()) + Math.abs(this.startPoint.getY() - this.endPoint.getY());
+        this.segmentLength = countSegmentLength();
+    }
+
+    public int countSegmentLength() {
+        segmentLength = Math.abs(this.startPoint.getX() - this.endPoint.getX()) + Math.abs(this.startPoint.getY() - this.endPoint.getY());
+        return segmentLength;
     }
 
     public int getSegmentLength() {
-        return segmentLength;
+        return countSegmentLength();
     }
 
     public String printSegmentShort() {
@@ -49,6 +54,10 @@ public class Segment {
         String segmentPath = "[";
         List<Point> pointsInSegment = new ArrayList<>();
         pointsInSegment = this.getPointsInSegment();
+        if(pointsInSegment.size() == 1) {
+            segmentPath += this.getStartPoint().toString() + ", " + this.getEndPoint().toString() + "]";
+            return segmentPath;
+        }
         for (int i = 0; i < pointsInSegment.size() - 1; i++) {
             segmentPath += pointsInSegment.get(i).toString() + ", ";
         }
