@@ -221,8 +221,8 @@ public class Individual {
         for (Path path : this.getPathList()) {
             previousSegment = null;
             nextSegment = null;
-            probability = 0.1f;
-//            probability = random.nextFloat();
+//            probability = 0.1f;
+            probability = random.nextFloat();
             if (probability < pm) { // if mutation occurs then
                 probability = random.nextFloat();
                 if (probability < 0.5) { // mutation a

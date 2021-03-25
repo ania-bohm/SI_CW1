@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
 public class GeneticAlgorithm {
@@ -64,11 +67,17 @@ public class GeneticAlgorithm {
     }
 
     // selection type - 0 - tournament, 1 - roulette
-    public Individual startEvolution(int selectionType, int[] bestFitnessInGeneration, float[] globalBestFitness) {
+    public Individual startEvolution(int selectionType, int[] bestFitnessInGeneration, float[] globalBestFitness) throws IOException {
         int iteration;
         Population population;
         Individual bestIndividual;
         Random random;
+//
+//        File file = new File("research_crossover_" + px + ".csv");
+//        file.createNewFile();
+//
+//        PrintWriter save = new PrintWriter(file);
+
 
         if (selectionType != 0 && selectionType != 1) {
             return null;
@@ -82,6 +91,7 @@ public class GeneticAlgorithm {
         random = new Random();
 
         while (iteration < numberOfGenerations) {
+            System.out.println("Generation: " + iteration);
             Population nextPopulation = new Population(populationSize);
 
             // finding new best individual in population
@@ -122,9 +132,14 @@ public class GeneticAlgorithm {
             population.calculatePopulationFitness(pcb);
 
             bestFitnessInGeneration[iteration] = population.findBestIndividual().getFitness();
-
+            // logging current fitnesses
+//            save.println(iteration + "; " + population.findBestIndividual().getFitness() + "; "
+//                    + population.averageFitness() + "; " + population.findWorstIndividual().getFitness() + "; "
+//                    + bestIndividual.getFitness());
             iteration++;
         }
+        bestIndividual.setFitness(pcb.calculateFitness(bestIndividual));
+//        save.close();
         return bestIndividual;
     }
 }
